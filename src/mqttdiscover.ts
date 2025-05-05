@@ -370,7 +370,9 @@ export class MqttDiscover {
   private onMqttMessage(topic: string, payload: Buffer): Promise<void> {
     if (topic) {
       debug('onMqttMessage: ' + topic)
-      let s = this.subscribedSlaves.find((s) => topic.startsWith(s.getBaseTopic()!))
+      let topicSplit = topic.split('/')
+      let searchTopic = topicSplit[0] + '/' + topicSplit[1]
+      let s = this.subscribedSlaves.find((s) => searchTopic === s.getBaseTopic())
       if (s) {
         if (s.getTriggerPollTopic() == topic) {
           debug('Triggering Poll')
